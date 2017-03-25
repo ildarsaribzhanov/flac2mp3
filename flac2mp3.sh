@@ -130,7 +130,7 @@ function main()
 		id3_tags=$(get_id3_in_flac "$f")
 
 		# Выполнение
-		eval "flac -cd \"$f\" | lame $lame_opts $id3_tags - \"$new_mp3_file\""
+		eval "flac -cd \"$f\" | lame $lame_opts --id3v2-only $id3_tags - \"$new_mp3_file\""
 	done
 }
 
