@@ -1,8 +1,30 @@
 #!/bin/bash
 
+# flac2mp3.sh — скипт для конвертации аудио файлов из FLAC в mp3 с сохранением ID3 тегов
+#
+# Умеет:
+# - обрабатываеть папки и вложенные папки
+# - сохраянет структуру папок при конвертации
+# - создает ID3v2 теги для mp3 из информации во flac-файах
+#
+# Зависимости:
+# - lame
+# - flac
+#
+#
+# Пример вызова:
+#
+#	с указанием необходимого битрейта, больше параметров в lame --longhelp
+#	flac2mp3.sh /path/flac/albums /path/mp3/albums "-b 256 -h"
+#
+#	без дополнительных параметров, из текущей папки в текущую папку, mp3 файлы будут лежать рядом с flac
+#	flac2mp3.sh ./ ./
+# 
+
 # Настройки LAME по-умолчанию
 DEFAULT_LAME="-b 320 -h"
 
+# создание параметров ID3 тегов для lame из metaflac
 function get_id3_in_flac()
 {
 	flac_file="$1"
@@ -113,8 +135,8 @@ function main()
 }
 
 
-echo 'Start processing'
+echo 'Start processing...'
 
 main "$@"
 
-echo 'End processing'
+echo 'Done!'
