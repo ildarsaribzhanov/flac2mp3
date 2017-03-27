@@ -96,6 +96,11 @@ function main()
 	for f in $(find "$input_dir" -name "*.flac" | sort); do
 		flac_file_name=`basename "$f"`
 		
+		# Чтобы оканчивалось на слеш
+		if [[ ! "$output_dir" =~ '/'$ ]]; then 
+			output_dir=$output_dir'/'
+		fi
+
 		# файл с заменой
 		new_mp3_file=$output_dir${f/${input_dir}/}
 
@@ -111,7 +116,7 @@ function main()
 		new_mp3_file="${new_mp3_file%.*}".mp3
 
 		id3_tags=$(get_id3_in_flac "$f")
-		
+
 		# Выполнение
 		eval "flac -cd \"$f\" | lame $lame_opts --id3v2-only $id3_tags - \"$new_mp3_file\""
 	done
