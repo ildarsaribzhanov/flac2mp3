@@ -31,27 +31,10 @@ function get_id3_in_flac()
 
 	metaflac --export-tags-to - "$flac_file" | while read -d $'\n' tag; do
 		tag_name=$(echo "$tag" | awk -F= '{ print $1 }')
+		tag_name=${tag_name,,} 	# lower case
 		tag_value=$(echo "$tag" | awk -F= '{ print $2 }' | sed 's/"/\\"/g')
 
 		case "$tag_name" in
-			TITLE)
-				echo -n " --tt \"$tag_value\""
-				;;
-			ARTIST)
-				echo -n " --ta \"$tag_value\""
-				;;
-			ALBUM)
-				echo -n " --tl \"$tag_value\""
-				;;
-			GENRE)
-				echo -n " --tg \"$tag_value\""
-				;;
-			DATE)
-				echo -n " --ty \"$tag_value\""
-				;;
-			TRACKNUMBER)
-				echo -n " --tn \"$tag_value\""
-				;;
 			title)
 				echo -n " --tt \"$tag_value\""
 				;;
@@ -128,7 +111,7 @@ function main()
 		new_mp3_file="${new_mp3_file%.*}".mp3
 
 		id3_tags=$(get_id3_in_flac "$f")
-
+		
 		# Выполнение
 		eval "flac -cd \"$f\" | lame $lame_opts --id3v2-only $id3_tags - \"$new_mp3_file\""
 	done
